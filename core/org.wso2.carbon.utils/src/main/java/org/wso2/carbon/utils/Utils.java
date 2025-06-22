@@ -303,4 +303,19 @@ public class Utils {
             }
         }
     }
+
+    public static int resolveTimeout(String timeoutProperty) {
+
+        int timeoutInMilliSeconds = 0;
+        if (CarbonUtils.getServerConfiguration().getFirstProperty(timeoutProperty) != null) {
+            timeoutInMilliSeconds = Integer.parseInt(CarbonUtils.getServerConfiguration().getFirstProperty(timeoutProperty));
+        }
+
+        if (timeoutInMilliSeconds <= 0) {
+            log.warn(String.format("The value for %s is either not set or is non-positive: %s. It is recommended to " +
+                    "specify a positive, non-zero timeout value.", timeoutProperty, timeoutInMilliSeconds));
+            timeoutInMilliSeconds = 0;
+        }
+        return timeoutInMilliSeconds;
+    }
 }

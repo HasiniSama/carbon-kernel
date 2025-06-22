@@ -252,5 +252,7 @@
   "database.registry_db.pool_options.defaultAutoCommit" : "true",
   "admin_console.resolve_absolute_urls.enable": true,
   "data_storage_type.keystores": "database",
-  "keystore.datasource": "jdbc/SHARED_DB"
+  "keystore.datasource": "jdbc/SHARED_DB",
+  "http_client.connection.timeout_in_milli_seconds": "180000",
+  "http_client.socket.timeout_in_milli_seconds": "300000"
 }
