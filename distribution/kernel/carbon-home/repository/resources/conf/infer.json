@@ -14,6 +14,7 @@
       "user_store.properties.StoreSaltedPassword": true,
       "user_store.properties.UserRolesCacheEnabled": true,
       "user_store.properties.UserNameUniqueAcrossTenants": false,
+      "user_store.properties.StoreUserAttributeValueAsUnicode": false,
       "tenant_mgt.tenant_manager.type": "jdbc"
     },
     "database_unique_id": {
@@ -30,7 +31,7 @@
       "user_store.properties.StoreSaltedPassword": true,
       "user_store.properties.UserRolesCacheEnabled": true,
       "user_store.properties.UserNameUniqueAcrossTenants": false,
-      "user_store.properties.StoreUserAttributeValueAsUnicode": true,
+      "user_store.properties.StoreUserAttributeValueAsUnicode": false,
       "user_store.properties.GroupIDEnabled": true,
       "tenant_mgt.tenant_manager.type": "jdbc"
     },
