@@ -869,6 +869,8 @@
         <ConfigSync>
       	    <Period>{{remote_logging.config_sync.period}}</Period>
         </ConfigSync>
+        <HideSecrets>{{remote_logging.hide_secrets}}</HideSecrets>
+        <EnableEncryption>{{remote_logging.encrypt_secrets}}</EnableEncryption>
     </RemoteLogging>
 
     {% if default_management_ui.path is defined %}
