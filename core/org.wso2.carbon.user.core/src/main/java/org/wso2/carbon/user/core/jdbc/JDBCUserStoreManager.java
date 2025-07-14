@@ -93,7 +93,6 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
@@ -3033,7 +3032,6 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
      * @throws UserStoreException The exception thrown at hashing the passwords.
      */
     protected String preparePassword(Object password, String saltValue) throws UserStoreException {
-
 
         if (passwordHashProcessor == null) {
             throw new UserStoreException("PasswordHashProcessor is not initialized.");
