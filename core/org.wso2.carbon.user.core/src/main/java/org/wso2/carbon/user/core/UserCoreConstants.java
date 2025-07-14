@@ -228,6 +228,8 @@ public class UserCoreConstants {
         public static final String PROPERTY_REPLACE_ESCAPE_CHARACTERS_AT_USER_LOGIN = "ReplaceEscapeCharactersAtUserLogin";
 
         public static final String PASSWORD_HASH_METHOD_PLAIN_TEXT = "PLAIN_TEXT";
+        public static final String PASSWORD_HASH_DIGEST_FUNCTION = "PasswordDigest";
+        public static final String PASSWORD_HASH_ALGORITHM_PROPERTIES = "Hash.Algorithm.Properties";
 
         public static final String PROPERTY_DOMAIN_NAME = "DomainName";
 

@@ -44,7 +44,9 @@ import org.wso2.carbon.user.core.common.RoleContext;
 import org.wso2.carbon.user.core.constants.UserCoreErrorConstants;
 import org.wso2.carbon.user.core.dto.RoleDTO;
 import org.wso2.carbon.user.core.exceptions.HashProviderException;
+import org.wso2.carbon.user.core.exceptions.PasswordHashingException;
 import org.wso2.carbon.user.core.hash.HashProviderFactory;
+import org.wso2.carbon.user.core.hash.PasswordHashProcessor;
 import org.wso2.carbon.user.core.hybrid.HybridJDBCConstants;
 import org.wso2.carbon.user.core.internal.UserStoreMgtDataHolder;
 import org.wso2.carbon.user.core.jdbc.caseinsensitive.JDBCCaseInsensitiveConstants;
@@ -132,6 +134,7 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
     protected Random random = new Random();
     protected int maximumUserNameListLength = -1;
     protected int queryTimeout = -1;
+    private PasswordHashProcessor passwordHashProcessor;
 
     private static final String H2 = "h2";
     private static final String DB2 = "db2";
@@ -250,6 +253,9 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
         // Used for Circuit breaker: By-default set to close state.
         setCircuitBreakerState(CIRCUIT_STATE_CLOSE);
         setThresholdStartTime(0);
+
+        // Initialize PasswordHashProcessor
+        this.passwordHashProcessor = getPasswordHashProcessor();
 
 		/* Initialize user roles cache as implemented in AbstractUserStoreManager */
         initUserRolesCache();
@@ -3028,51 +3034,34 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
      */
     protected String preparePassword(Object password, String saltValue) throws UserStoreException {
 
-        Secret credentialObj;
-        String passwordHash;
+
+        if (passwordHashProcessor == null) {
+            throw new UserStoreException("PasswordHashProcessor is not initialized.");
+        }
+
         try {
-            credentialObj = Secret.getSecret(password);
-        } catch (UnsupportedSecretTypeException e) {
-            throw new UserStoreException("Unsupported credential type", e);
+            return passwordHashProcessor.hashPassword(password, saltValue);
+        } catch (PasswordHashingException e) {
+            throw new UserStoreException(e);
         }
-        String digestFunction = realmConfig.getUserStoreProperties().get(JDBCRealmConstants.DIGEST_FUNCTION);
-        if (digestFunction != null) {
-            if (hashProvider == null) {
-                try {
-                    if (digestFunction.equals(UserCoreConstants.RealmConfig.PASSWORD_HASH_METHOD_PLAIN_TEXT)) {
-                        passwordHash = new String(credentialObj.getChars());
-                    } else {
-                        if (saltValue != null) {
-                            credentialObj.addChars(saltValue.toCharArray());
-                        }
-                        MessageDigest digest = MessageDigest.getInstance(digestFunction);
-                        byte[] byteValue = digest.digest(credentialObj.getBytes());
-                        passwordHash = Base64.encode(byteValue);
-                    }
-                } catch (NoSuchAlgorithmException e) {
-                    String msg = "Error occurred while preparing password.";
-                    if (log.isDebugEnabled()) {
-                        log.debug(msg, e);
-                    }
-                    throw new UserStoreException(msg, e);
-                }
-            } else {
-                try {
-                    byte[] hashByteArray = hashProvider.calculateHash(credentialObj.getChars(), saltValue);
-                    passwordHash = Base64.encode(hashByteArray);
-                } catch (HashProviderException e) {
-                    String msg = "Error occurred while preparing password";
-                    if (log.isDebugEnabled()) {
-                        log.debug(msg, e);
-                    }
-                    throw new UserStoreException(msg, e);
-                }
+    }
+
+    /**
+     * Lazily initializes and returns the {@link PasswordHashProcessor} instance.
+     *
+     * @return The initialized {@link PasswordHashProcessor} instance.
+     * @throws UserStoreException If an error occurs during initialization.
+     */
+    private PasswordHashProcessor getPasswordHashProcessor() throws UserStoreException {
+
+        if (passwordHashProcessor == null) {
+            try {
+                return new PasswordHashProcessor(realmConfig.getUserStoreProperties());
+            } catch (PasswordHashingException e) {
+                throw new UserStoreException("Failed to initialize PasswordHashProcessor", e);
             }
-        } else {
-            passwordHash = new String(credentialObj.getChars());
         }
-        credentialObj.clear();
-        return passwordHash;
+        return passwordHashProcessor;
     }
 
     /**
