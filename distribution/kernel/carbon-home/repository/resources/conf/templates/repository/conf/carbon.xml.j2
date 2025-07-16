@@ -911,4 +911,14 @@
         <!-- Include a data source name from the set of data sources defined in master-datasources.xml -->
         <DataSourceName>{{keystore.datasource}}</DataSourceName>
     </KeyStoreDataPersistenceManager>
+
+    <!-- Apache HttpClient configurations -->
+        <HttpClient>
+            <Connection>
+                <TimeoutInMilliSeconds>{{http_client.connection.timeout_in_milli_seconds}}</TimeoutInMilliSeconds>
+            </Connection>
+            <Socket>
+                <TimeoutInMilliSeconds>{{http_client.socket.timeout_in_milli_seconds}}</TimeoutInMilliSeconds>
+            </Socket>
+        </HttpClient>
 </Server>

@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.utils;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -30,6 +31,13 @@ import static org.wso2.carbon.CarbonConstants.HOST_NAME_VERIFIER;
  */
 public class HTTPClientUtils {
 
+    private static final int CONNECTION_TIMEOUT;
+    private static final int SOCKET_TIMEOUT;
+
+    static {
+        CONNECTION_TIMEOUT = Utils.resolveTimeout("HttpClient.Connection.TimeoutInMilliSeconds");
+        SOCKET_TIMEOUT = Utils.resolveTimeout("HttpClient.Socket.TimeoutInMilliSeconds");
+    }
 
     private HTTPClientUtils() {
         //disable external instantiation
@@ -58,6 +66,10 @@ public class HTTPClientUtils {
             httpClientBuilder.setHostnameVerifier(new AllowAllHostnameVerifier());
         }
 
+        RequestConfig.Builder config = RequestConfig.custom();
+        config.setConnectTimeout(CONNECTION_TIMEOUT);
+        config.setSocketTimeout(SOCKET_TIMEOUT);
+        httpClientBuilder.setDefaultRequestConfig(config.build());
         return httpClientBuilder;
     }
 }
