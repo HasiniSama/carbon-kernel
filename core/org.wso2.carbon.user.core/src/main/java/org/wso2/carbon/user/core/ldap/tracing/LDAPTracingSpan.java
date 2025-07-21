@@ -172,7 +172,7 @@ public class LDAPTracingSpan {
 
             span.setAttribute(LDAPTracingConstants.ATTR_PEER_SERVICE, LDAPTracingConstants.PEER_SERVICE_VALUE);
             if (StringUtils.isNotBlank(providerUrl)) {
-                span.setAttribute(LDAPTracingConstants.ATTR_NET_PEER_NAME, host);
+                span.setAttribute(LDAPTracingConstants.ATTR_NET_PEER_HOSTNAME, host);
             }
             span.setAttribute(LDAPTracingConstants.ATTR_NET_PEER_PORT, port);
 

@@ -60,8 +60,8 @@ public class LDAPTracingConstants {
     public static final String ATTR_LDAP_SEARCH_CONTROLS = "ldap.search.controls";
     public static final String ATTR_LDAP_SUCCESS = "ldap.success";
     public static final String ATTR_PEER_SERVICE = "peer.service";
-    public static final String ATTR_NET_PEER_NAME = "net.peer.name";
-    public static final String ATTR_NET_PEER_PORT = "net.peer.port";
+    public static final String ATTR_NET_PEER_HOSTNAME = "peer.hostname";
+    public static final String ATTR_NET_PEER_PORT = "peer.port";
     public static final String ATTR_LDAP_USER_DN = "ldap.user_dn";
 
     // MDC key used to extract correlation ID.
