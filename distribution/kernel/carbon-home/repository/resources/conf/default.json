@@ -256,5 +256,7 @@
   "data_storage_type.keystores": "database",
   "keystore.datasource": "jdbc/SHARED_DB",
   "http_client.connection.timeout_in_milli_seconds": "180000",
-  "http_client.socket.timeout_in_milli_seconds": "300000"
+  "http_client.socket.timeout_in_milli_seconds": "300000",
+  "ldap.tracing.enabled": false,
+  "ldap.tracing.service_name": "wso2is"
 }

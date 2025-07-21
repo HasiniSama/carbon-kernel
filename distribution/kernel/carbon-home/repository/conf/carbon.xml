@@ -754,4 +754,12 @@
         <DataSourceName>jdbc/SHARED_DB</DataSourceName>
     </KeyStoreDataPersistenceManager>
 
+    <!-- Configure to instrument LDAP related operations using OpenTelemetry manual instrumentation -->
+    <LDAP>
+        <Tracing>
+            <Enable>false</Enable>
+            <ServiceName>wso2is</ServiceName>
+        </Tracing>
+    </LDAP>
+
 </Server>
