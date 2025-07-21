@@ -163,6 +163,10 @@
                 <include>org.wso2.orbit.sun.xml.ws:jaxws-ri:jar</include>
                 <include>com.sun.xml.messaging.saaj:saaj-impl:jar</include>
                 <include>org.jvnet.staxex:stax-ex:jar</include>
+                <include>org.wso2.orbit.io.opentelemetry:opentelemetry-all:jar</include>
+                <include>com.google.guava:guava:jar</include>
+                <include>com.google.guava:failureaccess:jar</include>
+                <include>org.wso2.orbit.io.netty:netty-all:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
