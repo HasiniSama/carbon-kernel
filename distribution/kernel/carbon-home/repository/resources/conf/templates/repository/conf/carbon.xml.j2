@@ -922,12 +922,12 @@
             </Socket>
         </HttpClient>
 
-    <!-- Configure to instrument LDAP related operations using OpenTelemetry manual instrumentation -->
-    <LDAP>
-        <Tracing>
-            <Enable>{{ldap.tracing.enabled}}</Enable>
-            <ServiceName>{{ldap.tracing.service_name}}</ServiceName>
-        </Tracing>
-    </LDAP>
+    <!-- Configure to instrument operations using OpenTelemetry manual instrumentation -->
+    <Tracing>
+        <OpenTelemetry>
+            <Enable>{{tracing.opentelemetry.enabled}}</Enable>
+            <ServiceName>{{tracing.opentelemetry.service_name}}</ServiceName>
+        </OpenTelemetry>
+    </Tracing>
 
 </Server>
