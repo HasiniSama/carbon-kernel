@@ -32,6 +32,8 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.Control;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility class that provides helper methods for OpenTelemetry-based LDAP tracing. This includes masking sensitive
@@ -66,14 +68,14 @@ public class LDAPTracingUtil {
      * Determines whether OpenTelemetry tracing is enabled for LDAP operations.
      * <p>
      * This value is configured via {@code deployment.toml} and resolved using {@link ServerConfiguration} through the
-     * property key {@link LDAPTracingConstants#IS_LDAP_TRACING_ENABLED}.
+     * property key {@link LDAPTracingConstants#IS_TRACING_ENABLED}.
      *
      * @return {@code true} if OpenTelemetry tracing is enabled; {@code false} otherwise.
      */
     public static boolean isTracingEnabled() {
 
         boolean isEnabled = Boolean.parseBoolean(ServerConfiguration.getInstance().getFirstProperty(
-                LDAPTracingConstants.IS_LDAP_TRACING_ENABLED));
+                LDAPTracingConstants.IS_TRACING_ENABLED));
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("OpenTelemetry tracing is enabled: " + isEnabled);
@@ -125,14 +127,100 @@ public class LDAPTracingUtil {
             return input;
         }
 
-        String masked = input.replaceAll(LDAPTracingConstants.LDAP_STRING_MASK_REGEX,
-                LDAPTracingConstants.LDAP_STRING_MASK_REPLACEMENT + LDAPTracingConstants.MASKED_VALUE);
+        String masked;
+        if (input.contains(LDAPTracingConstants.OPEN_BRACKET) && input.contains(LDAPTracingConstants.CLOSE_BRACKET)) {
+            // Treat as LDAP filter.
+            masked = maskLdapFilter(input);
+        } else {
+            // Treat as DN.
+            masked = maskLdapDn(input);
+        }
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Masked LDAP string to: " + masked);
         }
 
         return masked;
+    }
+
+    /**
+     * Masks values in an LDAP filter string by replacing attribute values with a placeholder.
+     * Skips presence filters (e.g., (uid=*)).
+     *
+     * @param filter the LDAP filter string.
+     * @return the masked LDAP filter string.
+     */
+    private static String maskLdapFilter(String filter) {
+
+        Pattern pattern = Pattern.compile(LDAPTracingConstants.LDAP_FILTER_REGEX);
+        Matcher matcher = pattern.matcher(filter);
+        StringBuffer result = new StringBuffer();
+
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            String operator = matcher.group(2);
+            String value = matcher.group(3);
+
+            if (LDAPTracingConstants.ASTERISK.equals(value.trim())) {
+                matcher.appendReplacement(result, key + operator + LDAPTracingConstants.ASTERISK);
+                continue;
+            }
+
+            String maskedValue;
+
+            // Heuristic: if value contains '=', assume it's a DN.
+            if (value.contains(LDAPTracingConstants.EQUALS)) {
+                maskedValue = maskLdapDn(value);
+            } else {
+                // Normal comma-separated values.
+                StringBuilder maskedValues = new StringBuilder();
+                String[] values = value.split(LDAPTracingConstants.DELIMITER);
+                for (int i = 0; i < values.length; i++) {
+                    if (i > 0) {
+                        maskedValues.append(LDAPTracingConstants.DELIMITER);
+                    }
+                    maskedValues.append(LDAPTracingConstants.MASKED_VALUE);
+                }
+                maskedValue = maskedValues.toString();
+            }
+
+            matcher.appendReplacement(result, key + operator + maskedValue);
+        }
+
+        matcher.appendTail(result);
+        return result.toString();
+    }
+
+    /**
+     * Masks values in an LDAP Distinguished Name (DN) by replacing each attribute value.
+     *
+     * @param dn the LDAP DN string.
+     * @return the masked DN string.
+     */
+    private static String maskLdapDn(String dn) {
+
+        // Split on comma, then mask each key=value
+        String[] parts = dn.split(LDAPTracingConstants.LDAP_DN_REGEX);
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < parts.length; i++) {
+            String part = parts[i].trim();
+
+            int equalIndex = part.indexOf(LDAPTracingConstants.EQUALS_CHAR);
+            if (equalIndex > 0 && equalIndex < part.length() - 1) {
+                String key = part.substring(0, equalIndex).trim();
+                // You can enhance this to skip masking certain keys like "objectClass"
+                result.append(key).append(LDAPTracingConstants.EQUALS).append(LDAPTracingConstants.MASKED_VALUE);
+            } else {
+                result.append(part); // malformed component
+            }
+
+            if (i < parts.length - 1) {
+                result.append(LDAPTracingConstants.DELIMITER);
+            }
+        }
+
+        return result.toString();
     }
 
     /**

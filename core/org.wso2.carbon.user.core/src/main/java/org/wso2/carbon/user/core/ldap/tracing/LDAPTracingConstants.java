@@ -23,9 +23,9 @@ package org.wso2.carbon.user.core.ldap.tracing;
  */
 public class LDAPTracingConstants {
 
-    // Configurations required for LDAP Tracing.
-    public static final String IS_LDAP_TRACING_ENABLED = "LDAP.Tracing.Enable";
-    public static final String INSTRUMENTATION_SERVICE_NAME = "LDAP.Tracing.ServiceName";
+    // Configurations required for Tracing.
+    public static final String IS_TRACING_ENABLED = "Tracing.OpenTelemetry.Enable";
+    public static final String INSTRUMENTATION_SERVICE_NAME = "Tracing.OpenTelemetry.ServiceName";
 
     // Span name prefix for all LDAP operations.
     public static final String SPAN_NAME_LDAP_PREFIX = "ldap.";
@@ -68,21 +68,25 @@ public class LDAPTracingConstants {
     public static final String CORRELATION_ID_MDC = "Correlation-ID";
 
     // Misc constants.
+    public static final String ASTERISK = "*";
+    public static final String CLOSE_BRACKET = ")";
     public static final String DELIMITER = ",";
     public static final String DELIMITER_WITH_SPACE_SUFFIX = ", ";
     public static final String EQUALS = "=";
+    public static final char EQUALS_CHAR = '=';
     public static final String FORMATTED_SEARCH_CONTROL_STRING = "{scope=%d, countLimit=%d, timeLimit=%d, returningAttributes=%s, derefLinkFlag=%b, returningObjFlag=%b}";
     public static final int LDAP_DEFAULT_PORT = 389;
     public static final int LDAPS_DEFAULT_PORT = 636;
+    public static final String LDAP_DN_REGEX = "(?<!\\\\),";
+    public static final String LDAP_FILTER_REGEX = "(?i)([a-zA-Z0-9_.\\-:]+)([:~><]?=)((\"[^\"]*\")|[^)]+)";
     public static final String LDAP_PROVIDER_URL_REGEX = "\\s+";
     public static final String LDAP_SCHEME_URL_REGEX = "(?i)^\\s*(ldap|ldaps)://.*";
     public static final String LDAP_DEFAULT_SCHEME_PREFIX = "ldap://";
     public static final String LDAPS_SCHEME = "ldaps";
-    public static final String LDAP_STRING_MASK_REGEX = "(?i)([a-zA-Z0-9\\\\-_.]+)=((\\\"[^\\\"]*\\\")|[^,\\\\)]+)";
-    public static final String LDAP_STRING_MASK_REPLACEMENT = "$1=";
     public static final String MASKED_VALUE = "***";
     public static final String MASKING_ATTRIBUTE_ERROR_MESSAGE = "error-masking-attributes";
     public static final String NO_SEARCH_CONTROLS = "no-search-controls";
+    public static final String OPEN_BRACKET = "(";
     public static final String PEER_SERVICE_VALUE = "ldap";
 
     // Traced LDAP method names used in span naming.
