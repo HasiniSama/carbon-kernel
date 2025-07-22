@@ -801,13 +801,13 @@ public class LDAPConnectionContext {
         if (startTLSEnabled) {
             // Returns an instance of LdapContextTracingWrapper if tracing is enabled, or LdapContextWrapper if it is
             // disabled.
-            if (LDAPTracingUtil.isTracingEnabled()){
+            if (LDAPTracingUtil.isTracingEnabled()) {
                 return StartTlsLdapContextFactory.build(environment, connectionControls, true);
             } else {
                 return StartTlsLdapContextFactory.build(environment, connectionControls, false);
             }
         } else {
-            if (LDAPTracingUtil.isTracingEnabled()){
+            if (LDAPTracingUtil.isTracingEnabled()) {
                 return LdapContextTracingWrapper.newInstance(environment, connectionControls);
             } else {
                 return new InitialLdapContext(environment, connectionControls);

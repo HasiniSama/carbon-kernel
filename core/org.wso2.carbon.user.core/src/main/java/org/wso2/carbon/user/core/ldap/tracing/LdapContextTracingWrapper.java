@@ -1320,7 +1320,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup bind with NamingException: " + namingException.getMessage(), namingException);
+                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage(), namingException);
             }
             throw namingException;
         }
@@ -1352,7 +1352,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup bind with NamingException: " + namingException.getMessage(), namingException);
+                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage(), namingException);
             }
             throw namingException;
         }
@@ -1384,7 +1384,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup rebind with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1417,7 +1417,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup rebind with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1446,7 +1446,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup unbind with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP unbind failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1475,7 +1475,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup unbind with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP unbind failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1507,7 +1507,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup rename with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP rename failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1537,7 +1537,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup rename with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP rename failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1608,7 +1608,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup destroySubcontext with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP destroySubcontext failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1637,7 +1637,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup destroySubcontext with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP destroySubcontext failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1668,7 +1668,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup createSubcontext with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1699,7 +1699,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup createSubcontext with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1729,7 +1729,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup lookupLink with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP lookupLink failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;
@@ -1759,7 +1759,7 @@ public class LdapContextTracingWrapper implements LdapContext {
         } catch (NamingException namingException) {
             ldapTracingSpan.error(namingException);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup lookupLink with NamingException: " + namingException.getMessage(),
+                LOG.debug("LDAP lookupLink failed with NamingException: " + namingException.getMessage(),
                         namingException);
             }
             throw namingException;

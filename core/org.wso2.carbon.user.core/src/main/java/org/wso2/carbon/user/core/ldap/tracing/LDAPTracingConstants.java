@@ -24,7 +24,7 @@ package org.wso2.carbon.user.core.ldap.tracing;
 public class LDAPTracingConstants {
 
     // Configurations required for Tracing.
-    public static final String IS_TRACING_ENABLED = "Tracing.OpenTelemetry.Enable";
+    public static final String IS_LDAP_TRACING_ENABLED = "Tracing.OpenTelemetry.LDAP.Enable";
     public static final String INSTRUMENTATION_SERVICE_NAME = "Tracing.OpenTelemetry.ServiceName";
 
     // Span name prefix for all LDAP operations.

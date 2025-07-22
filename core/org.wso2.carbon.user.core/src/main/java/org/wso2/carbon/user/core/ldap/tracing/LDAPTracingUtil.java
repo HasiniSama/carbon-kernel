@@ -68,14 +68,14 @@ public class LDAPTracingUtil {
      * Determines whether OpenTelemetry tracing is enabled for LDAP operations.
      * <p>
      * This value is configured via {@code deployment.toml} and resolved using {@link ServerConfiguration} through the
-     * property key {@link LDAPTracingConstants#IS_TRACING_ENABLED}.
+     * property key {@link LDAPTracingConstants#IS_LDAP_TRACING_ENABLED}.
      *
      * @return {@code true} if OpenTelemetry tracing is enabled; {@code false} otherwise.
      */
     public static boolean isTracingEnabled() {
 
         boolean isEnabled = Boolean.parseBoolean(ServerConfiguration.getInstance().getFirstProperty(
-                LDAPTracingConstants.IS_TRACING_ENABLED));
+                LDAPTracingConstants.IS_LDAP_TRACING_ENABLED));
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("OpenTelemetry tracing is enabled: " + isEnabled);
