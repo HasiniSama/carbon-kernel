@@ -149,6 +149,7 @@ public class LdapContextTracingWrapper implements LdapContext {
     /**
      * {@inheritDoc}
      */
+    @Override
     public LdapContext newInstance(Control[] requestControls) throws NamingException {
 
         // Start the tracing span for the newInstance method.

@@ -195,8 +195,8 @@ public class StartTlsLdapContextFactory {
         }
 
         /*
-        Verify whether the user is authenticated successfully.
-        {@link} https://docs.oracle.com/javase/jndi/tutorial/ldap/ext/src/StartTlsSimple.java
+         * Verify whether the user is authenticated successfully.
+         * {@link} https://docs.oracle.com/javase/jndi/tutorial/ldap/ext/src/StartTlsSimple.java
          */
         ldapContext.getAttributes("");
     }
