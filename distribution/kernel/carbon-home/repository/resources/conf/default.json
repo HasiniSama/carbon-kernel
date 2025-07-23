@@ -258,5 +258,5 @@
   "http_client.connection.timeout_in_milli_seconds": "180000",
   "http_client.socket.timeout_in_milli_seconds": "300000",
   "tracing.opentelemetry.ldap.enabled": false,
-  "tracing.opentelemetry.service_name": "wso2is"
+  "tracing.opentelemetry.ldap.scope_name": "wso2isldap"
 }

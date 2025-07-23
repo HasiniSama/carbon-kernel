@@ -47,15 +47,15 @@ public class LDAPTracingUtil {
      * Retrieves the instrumentation scope name used for OpenTelemetry tracing.
      * <p>
      * This value is configured via {@code deployment.toml} and resolved using {@link ServerConfiguration} through the
-     * property key {@link LDAPTracingConstants#INSTRUMENTATION_SERVICE_NAME}. It is typically used to name the tracer
-     * (e.g., "wso2is").
+     * property key {@link LDAPTracingConstants#INSTRUMENTATION_SCOPE_NAME}. It is typically used to name the tracer
+     * (e.g., "wso2isldap").
      *
      * @return the name of the OpenTelemetry instrumentation scope.
      */
     public static String getInstrumentationScopeNameFromConfig() {
 
         String scope = ServerConfiguration.getInstance().getFirstProperty(
-                LDAPTracingConstants.INSTRUMENTATION_SERVICE_NAME);
+                LDAPTracingConstants.INSTRUMENTATION_SCOPE_NAME);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Using instrumentation scope name: " + scope + " for OpenTelemetry tracing.");

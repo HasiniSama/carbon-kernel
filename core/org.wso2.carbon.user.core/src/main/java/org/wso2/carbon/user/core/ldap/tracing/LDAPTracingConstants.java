@@ -25,7 +25,7 @@ public class LDAPTracingConstants {
 
     // Configurations required for Tracing.
     public static final String IS_LDAP_TRACING_ENABLED = "Tracing.OpenTelemetry.LDAP.Enable";
-    public static final String INSTRUMENTATION_SERVICE_NAME = "Tracing.OpenTelemetry.ServiceName";
+    public static final String INSTRUMENTATION_SCOPE_NAME = "Tracing.OpenTelemetry.LDAP.ScopeName";
 
     // Span name prefix for all LDAP operations.
     public static final String SPAN_NAME_LDAP_PREFIX = "ldap.";

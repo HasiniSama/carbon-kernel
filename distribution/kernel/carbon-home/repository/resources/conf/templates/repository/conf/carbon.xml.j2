@@ -925,9 +925,9 @@
     <!-- Configure to instrument operations using OpenTelemetry manual instrumentation -->
     <Tracing>
         <OpenTelemetry>
-            <ServiceName>{{tracing.opentelemetry.service_name}}</ServiceName>
             <LDAP>
                 <Enable>{{tracing.opentelemetry.ldap.enabled}}</Enable>
+                <ScopeName>{{tracing.opentelemetry.ldap.scope_name}}</ScopeName>
             </LDAP>
         </OpenTelemetry>
     </Tracing>

@@ -757,9 +757,9 @@
     <!-- Configure to instrument operations using OpenTelemetry manual instrumentation -->
     <Tracing>
         <OpenTelemetry>
-            <ServiceName>wso2is</ServiceName>
             <LDAP>
                 <Enable>false</Enable>
+                <ScopeName>wso2isldap</ScopeName>
             </LDAP>
         </OpenTelemetry>
     </Tracing>
