@@ -79,8 +79,8 @@ public class LDAPTracingConstants {
     public static final int LDAPS_DEFAULT_PORT = 636;
     public static final String LDAP_DN_REGEX = "(?<!\\\\),";
     public static final String LDAP_FILTER_REGEX = "(?i)([a-zA-Z0-9_.\\-:]+)([:~><]?=)((\"[^\"]*\")|[^)]+)";
-    public static final String LDAP_PROVIDER_URL_REGEX = "\\s+";
-    public static final String LDAP_SCHEME_URL_REGEX = "(?i)^\\s*(ldap|ldaps)://.*";
+    public static final String LDAP_PROVIDER_URL_SPLIT_REGEX = "\\s+";
+    public static final String LDAP_SCHEME_URL_REGEX = "(?i)^(ldap|ldaps)://.*";
     public static final String LDAP_DEFAULT_SCHEME_PREFIX = "ldap://";
     public static final String LDAPS_SCHEME = "ldaps";
     public static final String MASKED_VALUE = "***";

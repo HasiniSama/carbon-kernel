@@ -69,7 +69,7 @@ public class StartTlsLdapContextFactory {
                 ldapTracingSpan.success();
                 return ldapContext;
             } catch (Exception exception) {
-                ldapTracingSpan.error(exception);
+                ldapTracingSpan.error();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("LDAP build start TLS failed with Exception: " + exception.getMessage(), exception);
                 }

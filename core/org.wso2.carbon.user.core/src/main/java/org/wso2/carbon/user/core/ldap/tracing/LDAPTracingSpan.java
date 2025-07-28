@@ -103,16 +103,14 @@ public class LDAPTracingSpan {
 
     /**
      * Records an error in the span and ends it.
-     *
-     * @param exception The exception encountered during the LDAP operation.
      */
-    public void error(Exception exception) {
+    public void error() {
 
-        span.recordException(exception);
-        span.setStatus(StatusCode.ERROR, exception.getMessage());
+        span.setStatus(StatusCode.ERROR, "An error occurred while performing the LDAP operation.");
         span.end();
-
-        LOG.warn("LDAP span ended with error: " + exception.getMessage());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("LDAP span ended with error.");
+        }
     }
 
     /**
@@ -142,12 +140,12 @@ public class LDAPTracingSpan {
             String providerUrl = (urlObj != null) ? urlObj.toString().trim() : null;
 
             if (StringUtils.isBlank(providerUrl)) {
-                LOG.warn("LDAP provider URL is empty or missing. Using fallback values.");
+                LOG.warn("LDAP provider URL is empty or missing.");
                 span.setAttribute(LDAPTracingConstants.ATTR_PEER_SERVICE, LDAPTracingConstants.PEER_SERVICE_VALUE);
                 return;
             }
 
-            String[] urls = providerUrl.split(LDAPTracingConstants.LDAP_PROVIDER_URL_REGEX);
+            String[] urls = providerUrl.split(LDAPTracingConstants.LDAP_PROVIDER_URL_SPLIT_REGEX);
             String firstUrl = urls[0];
 
             // Ensure the URL has a valid scheme, default to ldap:// if missing.
@@ -160,7 +158,7 @@ public class LDAPTracingSpan {
             int port = ldapUri.getPort();
 
             if (StringUtils.isBlank(host)) {
-                LOG.warn("Host is missing in the LDAP provider URL. Using fallback.");
+                LOG.warn("Host is missing in the LDAP provider URL.");
             }
 
             // Default port if not specified.
@@ -179,9 +177,8 @@ public class LDAPTracingSpan {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Configured LDAP peer attributes - host: " + host + ", port: " + port);
             }
-
         } catch (Exception exception) {
-            LOG.warn("Failed to parse LDAP provider URL. Using fallback values." + exception.getMessage());
+            LOG.warn("Failed to parse LDAP provider URL." + exception.getMessage());
             span.setAttribute(LDAPTracingConstants.ATTR_PEER_SERVICE, LDAPTracingConstants.PEER_SERVICE_VALUE);
         }
     }

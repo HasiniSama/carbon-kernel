@@ -272,7 +272,7 @@ public class LDAPTracingUtil {
                         LDAPTracingConstants.MASKED_VALUE).append(LDAPTracingConstants.DELIMITER_WITH_SPACE_SUFFIX);
             }
         } catch (NamingException namingException) {
-            LOG.warn("Failed to mask attributes due to LDAP exception.", namingException);
+            LOG.warn("Failed to mask attributes due to LDAP exception.");
             return LDAPTracingConstants.MASKING_ATTRIBUTE_ERROR_MESSAGE;
         }
 

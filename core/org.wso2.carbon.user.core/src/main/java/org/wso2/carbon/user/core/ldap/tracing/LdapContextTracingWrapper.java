@@ -137,10 +137,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return response;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP extendedOperation failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP extendedOperation failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -177,10 +176,9 @@ public class LdapContextTracingWrapper implements LdapContext {
 
         } catch (NamingException namingException) {
             // Record exception details in the span before rethrowing.
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP newInstance failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP newInstance failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -262,7 +260,7 @@ public class LdapContextTracingWrapper implements LdapContext {
                 }
             } else {
                 // System-level bind failure.
-                ldapTracingSpan.error(authenticationException);
+                ldapTracingSpan.error();
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("System-level AuthenticationException during LDAP context creation: " +
@@ -273,10 +271,9 @@ public class LdapContextTracingWrapper implements LdapContext {
 
         } catch (NamingException namingException) {
             // Log and record generic naming exception.
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP context creation failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP context creation failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -305,10 +302,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.reconnect(connectionControls);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP reconnect failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP reconnect failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -375,10 +371,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return result;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -405,10 +400,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return result;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -440,10 +434,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return result;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -475,10 +468,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return result;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP getAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -508,10 +500,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.modifyAttributes(name, mod_op, attrs);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -541,10 +532,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.modifyAttributes(name, mod_op, attrs);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -576,10 +566,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.modifyAttributes(name, mods);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -611,10 +600,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.modifyAttributes(name, mods);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP modifyAttributes failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -640,10 +628,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.bind(name, obj, attrs);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -669,10 +656,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.bind(name, obj, attrs);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -698,10 +684,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.rebind(name, obj, attrs);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -727,10 +712,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.rebind(name, obj, attrs);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -761,10 +745,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper((LdapContext) ctx, startTlsResponseWrapper) :
                     new LdapContextTracingWrapper((LdapContext) ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -795,10 +778,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper((LdapContext) ctx, startTlsResponseWrapper) :
                     new LdapContextTracingWrapper((LdapContext) ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -826,10 +808,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper((LdapContext) ctx, startTlsResponseWrapper) :
                     new LdapContextTracingWrapper((LdapContext) ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP getSchema failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP getSchema failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -857,10 +838,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper((LdapContext) ctx, startTlsResponseWrapper) :
                     new LdapContextTracingWrapper((LdapContext) ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP getSchema failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP getSchema failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -888,10 +868,10 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper((LdapContext) ctx, startTlsResponseWrapper) :
                     new LdapContextTracingWrapper((LdapContext) ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("LDAP getSchemaClassDefinition failed with NamingException: " +
-                        namingException.getMessage(), namingException);
+                        namingException.getMessage());
             }
             throw namingException;
         }
@@ -919,10 +899,10 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper((LdapContext) ctx, startTlsResponseWrapper) :
                     new LdapContextTracingWrapper((LdapContext) ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("LDAP getSchemaClassDefinition failed with NamingException: " +
-                        namingException.getMessage(), namingException);
+                        namingException.getMessage());
             }
             throw namingException;
         }
@@ -958,10 +938,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -997,10 +976,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1031,10 +1009,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1065,10 +1042,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1101,10 +1077,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1137,10 +1112,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1178,10 +1152,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1219,10 +1192,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return results;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP search failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1252,10 +1224,9 @@ public class LdapContextTracingWrapper implements LdapContext {
                     new LdapContextTracingWrapper((LdapContext) result);
 
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP lookup failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1285,10 +1256,9 @@ public class LdapContextTracingWrapper implements LdapContext {
                     new LdapContextTracingWrapper((LdapContext) result);
 
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookup failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP lookup failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1318,9 +1288,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.bind(name, obj);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage(), namingException);
+                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1350,9 +1320,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.bind(name, obj);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage(), namingException);
+                LOG.debug("LDAP bind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1382,10 +1352,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.rebind(name, obj);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1415,10 +1384,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.rebind(name, obj);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP rebind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1444,10 +1412,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.unbind(name);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP unbind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP unbind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1473,10 +1440,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.unbind(name);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP unbind failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP unbind failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1505,10 +1471,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.rename(oldName, newName);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP rename failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP rename failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1535,10 +1500,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.rename(oldName, newName);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP rename failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP rename failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1606,10 +1570,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.destroySubcontext(name);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP destroySubcontext failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP destroySubcontext failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1635,10 +1598,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapContext.destroySubcontext(name);
             ldapTracingSpan.success();
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP destroySubcontext failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP destroySubcontext failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1666,10 +1628,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper(ctx, startTlsResponseWrapper) : new
                     LdapContextTracingWrapper(ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1697,10 +1658,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             return isStartTlsEnabled ? new LdapContextTracingWrapper(ctx, startTlsResponseWrapper) : new
                     LdapContextTracingWrapper(ctx);
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP createSubcontext failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1727,10 +1687,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return result;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookupLink failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP lookupLink failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
@@ -1757,10 +1716,9 @@ public class LdapContextTracingWrapper implements LdapContext {
             ldapTracingSpan.success();
             return result;
         } catch (NamingException namingException) {
-            ldapTracingSpan.error(namingException);
+            ldapTracingSpan.error();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("LDAP lookupLink failed with NamingException: " + namingException.getMessage(),
-                        namingException);
+                LOG.debug("LDAP lookupLink failed with NamingException: " + namingException.getMessage());
             }
             throw namingException;
         }
