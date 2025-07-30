@@ -110,22 +110,6 @@
             <artifactId>serializer</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.io.opentelemetry</groupId>
-            <artifactId>opentelemetry-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>failureaccess</artifactId>
-        </dependency>
-        <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
         </dependency>
