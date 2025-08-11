@@ -85,7 +85,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -827,7 +826,11 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
             prepStmt.setInt(count++, tenantId);
             for (LoginIdentifier loginIdentifier : loginIdentifiers) {
                 prepStmt.setString(count++, loginIdentifier.getLoginKey());
-                prepStmt.setString(count++, loginIdentifier.getLoginValue());
+                if (shouldUseNString(dbConnection)) {
+                    prepStmt.setNString(count++, loginIdentifier.getLoginValue());
+                } else {
+                    prepStmt.setString(count++, loginIdentifier.getLoginValue());
+                }
                 prepStmt.setString(count++, loginIdentifier.getProfileName());
                 prepStmt.setInt(count++, tenantId);
             }
@@ -2323,6 +2326,13 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
     private void updateStringValuesToDatabase(Connection dbConnection, String sqlStmt, Object... params)
             throws UserStoreException {
 
+        updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, -1, params);
+    }
+
+    private void updateStringValuesToDatabaseIncludingUMAttrValue(Connection dbConnection, String sqlStmt,
+                                                                int attrValueIndex, Object... params)
+            throws UserStoreException {
+
         PreparedStatement prepStmt = null;
         boolean localConnection = false;
         try {
@@ -2337,7 +2347,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                     if (param == null) {
                         throw new UserStoreException("Invalid data provided");
                     } else if (param instanceof String) {
-                        if (shouldUseNString(dbConnection)) {
+                        if (attrValueIndex == i && shouldUseNString(dbConnection)) {
                             prepStmt.setNString(i + 1, (String) param);
                         } else {
                             prepStmt.setString(i + 1, (String) param);
@@ -2404,11 +2414,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                     if (param == null) {
                         throw new UserStoreException("Invalid data provided");
                     } else if (param instanceof String) {
-                        if (shouldUseNString(dbConnection)) {
-                            prepStmt.setNString(i + 1, (String) param);
-                        } else {
-                            prepStmt.setString(i + 1, (String) param);
-                        }
+                        prepStmt.setString(i + 1, (String) param);
                     } else if (param instanceof Integer) {
                         prepStmt.setInt(i + 1, (Integer) param);
                     } else if (param instanceof Date) {
@@ -2476,11 +2482,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                     } else if (param instanceof String[]) {
                         batchParamIndex = i;
                     } else if (param instanceof String) {
-                        if (shouldUseNString(dbConnection)) {
-                            prepStmt.setNString(i + 1, (String) param);
-                        } else {
-                            prepStmt.setString(i + 1, (String) param);
-                        }
+                        prepStmt.setString(i + 1, (String) param);
                     } else if (param instanceof Integer) {
                         prepStmt.setInt(i + 1, (Integer) param);
                     } else if (param instanceof Date) {
@@ -2549,14 +2551,15 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
 
             if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
                 if (UserCoreConstants.OPENEDGE_TYPE.equals(type)) {
-                    updateStringValuesToDatabase(dbConnection, sqlStmt, propertyName, value, profileName, tenantId,
-                            userID, tenantId);
+                    updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 1, propertyName, value,
+                            profileName, tenantId, userID, tenantId);
                 } else {
-                    updateStringValuesToDatabase(dbConnection, sqlStmt, userID, tenantId, propertyName, value,
-                            profileName, tenantId);
+                    updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 3, userID, tenantId,
+                            propertyName, value, profileName, tenantId);
                 }
             } else {
-                updateStringValuesToDatabase(dbConnection, sqlStmt, userID, propertyName, value, profileName);
+                updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 2, userID, propertyName,
+                        value, profileName);
             }
         } catch (Exception e) {
             String msg = "Error occurred while adding user property for user : " + userID + " & property name : "
@@ -2577,10 +2580,11 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
         }
 
         if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
-            updateStringValuesToDatabase(dbConnection, sqlStmt, value, propertyName, profileName, userID, tenantId,
-                    tenantId);
+            updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 0, value, propertyName, profileName,
+                    userID, tenantId, tenantId);
         } else {
-            updateStringValuesToDatabase(dbConnection, sqlStmt, value, userID, propertyName, profileName);
+            updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 0, value, userID, propertyName,
+                    profileName);
         }
 
     }
@@ -3102,14 +3106,14 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                 for (String propertyValue : propertyValues) {
                     if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
                         if (UserCoreConstants.OPENEDGE_TYPE.equals(type)) {
-                            batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyName, propertyValue,
+                            batchUpdateStringValuesToDatabase(useNString, prepStmt, 1, propertyName, propertyValue,
                                     profileName, tenantId, userID, tenantId);
                         } else {
-                            batchUpdateStringValuesToDatabase(useNString, prepStmt, userID, tenantId, propertyName,
+                            batchUpdateStringValuesToDatabase(useNString, prepStmt, 3, userID, tenantId, propertyName,
                                     propertyValue, profileName, tenantId);
                         }
                     } else {
-                        batchUpdateStringValuesToDatabase(useNString, prepStmt, userID, propertyName, propertyValue,
+                        batchUpdateStringValuesToDatabase(useNString, prepStmt, 2, userID, propertyName, propertyValue,
                                 profileName);
                     }
                 }
@@ -3196,14 +3200,14 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                 String propertyValue = entry.getValue();
                 if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
                     if (UserCoreConstants.OPENEDGE_TYPE.equals(type)) {
-                        batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyName, propertyValue, profileName,
+                        batchUpdateStringValuesToDatabase(useNString, prepStmt, 1, propertyName, propertyValue, profileName,
                                 tenantId, userID, tenantId);
                     } else {
-                        batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyValue, propertyName, profileName,
+                        batchUpdateStringValuesToDatabase(useNString, prepStmt, 0, propertyValue, propertyName, profileName,
                                 userID, tenantId, tenantId);
                     }
                 } else {
-                    batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyValue, userID, propertyName,
+                    batchUpdateStringValuesToDatabase(useNString, prepStmt, 0, propertyValue, userID, propertyName,
                             profileName);
                 }
             }
@@ -3247,8 +3251,8 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
         }
     }
 
-    private void batchUpdateStringValuesToDatabase(boolean useNString, PreparedStatement prepStmt, Object... params)
-            throws UserStoreException {
+    private void batchUpdateStringValuesToDatabase(boolean useNString, PreparedStatement prepStmt, int attrValueIndex,
+                                                   Object... params) throws UserStoreException {
 
         try {
             if (params != null && params.length > 0) {
@@ -3257,7 +3261,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                     if (param == null) {
                         throw new UserStoreException("Invalid data provided");
                     } else if (param instanceof String) {
-                        if (useNString) {
+                        if (useNString && attrValueIndex == i) {
                             prepStmt.setNString(i + 1, (String) param);
                         } else {
                             prepStmt.setString(i + 1, (String) param);
@@ -4526,6 +4530,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
         Map<Integer, Integer> integerParameters = sqlBuilder.getIntegerParameters();
         Map<Integer, String> stringParameters = sqlBuilder.getStringParameters();
         Map<Integer, Long> longParameters = sqlBuilder.getLongParameters();
+        List<Integer> attrValueIndexes = sqlBuilder.getAttributeValueIndexes();
 
         for (Map.Entry<Integer, Integer> entry : integerParameters.entrySet()) {
             if (entry.getKey() > startIndex && entry.getKey() <= endIndex) {
@@ -4535,7 +4540,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
 
         for (Map.Entry<Integer, String> entry : stringParameters.entrySet()) {
             if (entry.getKey() > startIndex && entry.getKey() <= endIndex) {
-                if (useNString) {
+                if (useNString && attrValueIndexes.contains(entry.getKey())) {
                     prepStmt.setNString(entry.getKey() - startIndex, entry.getValue());
                 } else {
                     prepStmt.setString(entry.getKey() - startIndex, entry.getValue());
@@ -4611,7 +4616,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
         } else if (isGroupFiltering) {
             boolean isGroupFilteringWithNEOperator = isGroupFilteringWithNotEqualOperator(expressionConditions);
             String roleUserJoinClause =  isGroupFilteringWithNEOperator ? RIGHT_JOIN : INNER_JOIN;
-            
+
             if (DB2.equals(dbType)) {
                 sqlStatement = new StringBuilder(
                         "SELECT U.UM_USER_ID, U.UM_USER_NAME FROM (SELECT ROW_NUMBER() OVER (ORDER BY "
@@ -4854,7 +4859,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
         addingWheres(header, subSqlBuilder);
         buildGroupWhereConditions(subSqlBuilder, expressionCondition.getOperation(),
                 expressionCondition.getAttributeValue());
-        
+
         subSqlBuilders.add(subSqlBuilder);
     }
 
@@ -4915,7 +4920,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
         addingWheres(header, subSqlBuilder);
         buildClaimWhereConditions(subSqlBuilder, expressionCondition.getAttributeName(),
                 expressionCondition.getOperation(), expressionCondition.getAttributeValue());
-        
+
         subSqlBuilders.add(subSqlBuilder);
     }
 
@@ -5235,7 +5240,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
      * @return true if there is a group filter condition using the 'ne' operator; false otherwise.
      */
     private boolean isGroupFilteringWithNotEqualOperator(List<ExpressionCondition> expressionConditions) {
-        
+
         for (ExpressionCondition cond : expressionConditions) {
             if (ExpressionAttribute.ROLE.toString().equals(cond.getAttributeName()) &&
                     ExpressionOperation.NE.toString().equals(cond.getOperation())) {

@@ -2767,14 +2767,22 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
         return saltValue;
     }
 
+    private void updateStringValuesToDatabase(Connection dbConnection, String sqlStmt, Object... params)
+            throws UserStoreException {
+
+        updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, -1, params);
+    }
+
     /**
      * @param dbConnection
      * @param sqlStmt
      * @param params
      * @throws UserStoreException
      */
-    private void updateStringValuesToDatabase(Connection dbConnection, String sqlStmt,
-                                              Object... params) throws UserStoreException {
+    private void updateStringValuesToDatabaseIncludingUMAttrValue(Connection dbConnection, String sqlStmt,
+                                                                int attrValueIndex, Object... params)
+            throws UserStoreException {
+
         PreparedStatement prepStmt = null;
         boolean localConnection = false;
         try {
@@ -2789,7 +2797,7 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
                     if (param == null) {
                         throw new UserStoreException("Invalid data provided");
                     } else if (param instanceof String) {
-                        if (shouldUseNString(dbConnection)) {
+                        if (attrValueIndex == i && shouldUseNString(dbConnection)) {
                             prepStmt.setNString(i + 1, (String) param);
                         } else {
                             prepStmt.setString(i + 1, (String) param);
@@ -2862,14 +2870,15 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
 
             if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
                 if (UserCoreConstants.OPENEDGE_TYPE.equals(type)) {
-                    updateStringValuesToDatabase(dbConnection, sqlStmt, propertyName, value,
-                            profileName, tenantId, userName, tenantId);
+                    updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 1, propertyName,
+                            value, profileName, tenantId, userName, tenantId);
                 } else {
-                    updateStringValuesToDatabase(dbConnection, sqlStmt, userName, tenantId,
-                            propertyName, value, profileName, tenantId);
+                    updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 3, userName,
+                            tenantId, propertyName, value, profileName, tenantId);
                 }
             } else {
-                updateStringValuesToDatabase(dbConnection, sqlStmt, userName, propertyName, value, profileName);
+                updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 2, userName,
+                        propertyName, value, profileName);
             }
         } catch (Exception e) {
             String msg = "Error occurred while adding user property for user : " + userName + " & property name : " +
@@ -2902,10 +2911,11 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
         }
 
         if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
-            updateStringValuesToDatabase(dbConnection, sqlStmt, value, userName, tenantId,
-                    propertyName, profileName, tenantId);
+            updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 0, value, userName,
+                    tenantId, propertyName, profileName, tenantId);
         } else {
-            updateStringValuesToDatabase(dbConnection, sqlStmt, value, userName, propertyName, profileName);
+            updateStringValuesToDatabaseIncludingUMAttrValue(dbConnection, sqlStmt, 0, value, userName,
+                    propertyName, profileName);
         }
 
     }
@@ -3630,14 +3640,14 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
                 String propertyValue = entry.getValue();
                 if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
                     if (UserCoreConstants.OPENEDGE_TYPE.equals(type)) {
-                        batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyName, propertyValue,
+                        batchUpdateStringValuesToDatabase(useNString, prepStmt, 1, propertyName, propertyValue,
                                 profileName, tenantId, userName, tenantId);
                     } else {
-                        batchUpdateStringValuesToDatabase(useNString, prepStmt, userName, tenantId, propertyName,
+                        batchUpdateStringValuesToDatabase(useNString, prepStmt, 3, userName, tenantId, propertyName,
                                 propertyValue, profileName, tenantId);
                     }
                 } else {
-                    batchUpdateStringValuesToDatabase(useNString, prepStmt, userName, propertyName, propertyValue,
+                    batchUpdateStringValuesToDatabase(useNString, prepStmt, 2, userName, propertyName, propertyValue,
                                 profileName);
                 }
             }
@@ -3733,14 +3743,14 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
                 String propertyValue = entry.getValue();
                 if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
                     if (UserCoreConstants.OPENEDGE_TYPE.equals(type)) {
-                        batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyName, propertyValue,
+                        batchUpdateStringValuesToDatabase(useNString, prepStmt, 1, propertyName, propertyValue,
                                 profileName, tenantId, userName, tenantId);
                     } else {
-                        batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyValue, userName, tenantId,
+                        batchUpdateStringValuesToDatabase(useNString, prepStmt, 0, propertyValue, userName, tenantId,
                                 propertyName, profileName, tenantId);
                     }
                 } else {
-                    batchUpdateStringValuesToDatabase(useNString, prepStmt, propertyValue, userName, propertyName,
+                    batchUpdateStringValuesToDatabase(useNString, prepStmt, 0, propertyValue, userName, propertyName,
                             profileName);
                 }
             }
@@ -3785,7 +3795,7 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
      * @param params
      * @throws UserStoreException
      */
-    private void batchUpdateStringValuesToDatabase(boolean useNString, PreparedStatement prepStmt,
+    private void batchUpdateStringValuesToDatabase(boolean useNString, PreparedStatement prepStmt, int attrValueIndex,
                                                    Object... params) throws UserStoreException {
 
         try {
@@ -3795,7 +3805,7 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
                     if (param == null) {
                         throw new UserStoreException("Invalid data provided");
                     } else if (param instanceof String) {
-                        if (useNString) {
+                        if (attrValueIndex == i && useNString) {
                             prepStmt.setNString(i + 1, (String) param);
                         } else {
                             prepStmt.setString(i + 1, (String) param);
@@ -4449,6 +4459,7 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
         Map<Integer, Integer> integerParameters = sqlBuilder.getIntegerParameters();
         Map<Integer, String> stringParameters = sqlBuilder.getStringParameters();
         Map<Integer, Long> longParameters = sqlBuilder.getLongParameters();
+        List<Integer> attrValueIndexes = sqlBuilder.getAttributeValueIndexes();
 
         for (Map.Entry<Integer, Integer> entry : integerParameters.entrySet()) {
             if (entry.getKey() > startIndex && entry.getKey() <= endIndex) {
@@ -4458,7 +4469,7 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
 
         for (Map.Entry<Integer, String> entry : stringParameters.entrySet()) {
             if (entry.getKey() > startIndex && entry.getKey() <= endIndex) {
-                if (shouldUseNString(dbConnection)){
+                if (shouldUseNString(dbConnection) && attrValueIndexes.contains(entry.getKey())) {
                     prepStmt.setNString(entry.getKey() - startIndex, entry.getValue());
                 } else {
                     prepStmt.setString(entry.getKey() - startIndex, entry.getValue());

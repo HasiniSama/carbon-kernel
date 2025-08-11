@@ -18,6 +18,7 @@
 package org.wso2.carbon.user.core.model;
 
 import org.apache.commons.lang.StringUtils;
+import org.wso2.carbon.user.core.UserCoreConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +38,7 @@ public class SqlBuilder {
     private Map<Integer, Integer> integerParameters = new HashMap<>();
     private Map<Integer, String> stringParameters = new HashMap<>();
     private Map<Integer, Long> longParameters = new HashMap<>();
+    private final List<Integer> attrValueIndexes = new ArrayList<>();
     private boolean addedWhereStatement = false;
 
     public SqlBuilder(StringBuilder sql) {
@@ -72,6 +74,11 @@ public class SqlBuilder {
     public SqlBuilder where(String expr, String value) {
 
         wheres.add(expr);
+        if (expr.contains(UserCoreConstants.UM_ATTRIBUTE_COLUMN)) {
+            // If the expression contains UM_ATTRIBUTE_COLUMN, we need to track the index of this value
+            // for later use in the SQL statement.
+            attrValueIndexes.add(count);
+        }
         stringParameters.put(count, value);
         count++;
         return this;
@@ -91,6 +98,11 @@ public class SqlBuilder {
         longParameters.put(count, value);
         count++;
         return this;
+    }
+
+    public List<Integer> getAttributeValueIndexes() {
+
+        return attrValueIndexes;
     }
 
     public Map<Integer, Integer> getIntegerParameters() {
