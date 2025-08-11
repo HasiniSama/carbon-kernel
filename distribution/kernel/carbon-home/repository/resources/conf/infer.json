@@ -255,8 +255,8 @@
       "user_store.properties.CaseInsensitiveUsername": true,
       "user_store.properties.GroupIDEnabled": true,
       "user_store.properties.GroupIdAttribute": "objectGUID",
-      "user_store.properties.GroupLastModifiedDateAttribute": "whenCreated",
-      "user_store.properties.GroupCreatedDateAttribute": "whenChanged",
+      "user_store.properties.GroupLastModifiedDateAttribute": "whenChanged",
+      "user_store.properties.GroupCreatedDateAttribute": "whenCreated",
       "user_store.properties.ListServicePrincipalEntities": false
     }
   },
