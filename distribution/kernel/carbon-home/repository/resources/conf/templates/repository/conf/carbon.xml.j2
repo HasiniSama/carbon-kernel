@@ -921,4 +921,15 @@
                 <TimeoutInMilliSeconds>{{http_client.socket.timeout_in_milli_seconds}}</TimeoutInMilliSeconds>
             </Socket>
         </HttpClient>
+
+    <!-- Configure to instrument operations using OpenTelemetry manual instrumentation -->
+    <Tracing>
+        <OpenTelemetry>
+            <LDAP>
+                <Enable>{{tracing.opentelemetry.ldap.enabled}}</Enable>
+                <ScopeName>{{tracing.opentelemetry.ldap.scope_name}}</ScopeName>
+            </LDAP>
+        </OpenTelemetry>
+    </Tracing>
+
 </Server>

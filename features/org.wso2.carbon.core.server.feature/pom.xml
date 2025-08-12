@@ -75,6 +75,10 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.poi:poi-ooxml:${orbit.version.poi.ooxml}
                                 </bundleDef>
+                                <bundleDef>org.wso2.orbit.io.opentelemetry:opentelemetry-all</bundleDef>
+                                <bundleDef>com.google.guava:guava</bundleDef>
+                                <bundleDef>com.google.guava:failureaccess</bundleDef>
+                                <bundleDef>org.wso2.orbit.io.netty:netty-all</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.database.utils:compatible:${org.wso2.carbon.database.utils.version}</importFeatureDef>

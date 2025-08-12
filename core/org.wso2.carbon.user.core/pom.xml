@@ -142,6 +142,14 @@
             <groupId>org.wso2.carbon.crypto</groupId>
             <artifactId>org.wso2.carbon.crypto.api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.io.opentelemetry</groupId>
+            <artifactId>opentelemetry-all</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -192,9 +200,14 @@
                             !javax.xml.namespace,
                             org.wso2.carbon.utils.*,
                             org.apache.axiom.*; version="${imp.pkg.version.axiom}",
+                            org.wso2.carbon.base; version="${carbon.base.version.range}",
                             javax.sql.*,
+                            io.opentelemetry.api; version="${opentelemetry.all.version.range}",
+                            io.opentelemetry.api.trace; version="${opentelemetry.all.version.range}",
+                            io.opentelemetry.context; version="${opentelemetry.all.version.range}",
                             org.apache.commons.logging.*; version="${import.package.version.commons.logging}",
-                            org.apache.commons.lang.*;
+                            org.apache.commons.lang.*,
+                            org.slf4j,
                             javax.naming.*,
                             javax.xml.stream.*; version="1.0.1",
                             javax.xml.namespace; version=0.0.0,

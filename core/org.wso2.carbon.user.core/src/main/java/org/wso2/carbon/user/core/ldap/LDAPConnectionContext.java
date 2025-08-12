@@ -28,6 +28,9 @@ import org.wso2.carbon.user.core.CircuitBreakerOpenException;
 import org.wso2.carbon.user.core.UserStoreConfigConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.dto.CorrelationLogDTO;
+import org.wso2.carbon.user.core.ldap.tracing.LDAPTracingConstants;
+import org.wso2.carbon.user.core.ldap.tracing.LDAPTracingUtil;
+import org.wso2.carbon.user.core.ldap.tracing.LdapContextTracingWrapper;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.Secret;
 import org.wso2.carbon.utils.UnsupportedSecretTypeException;
@@ -647,6 +650,13 @@ public class LDAPConnectionContext {
             }
             tempEnv.put(Context.SECURITY_AUTHENTICATION, SECURITY_AUTHENTICATION_NONE);
 
+            // WSO2 IS uses two types of LDAP authentication: one for system-level binding and another for
+            // authenticating end users. This flow is related to user authentication. When user authentication fails,
+            // there is no reference to indicate that it is a user authentication failure, resulting in an incorrect
+            // error trace being sent to the tracing agent. This parameter helps identify such cases and exclude the
+            // error trace from spans.
+            tempEnv.put(LDAPTracingConstants.ENV_CREDENTIAL_FLOW, true);
+
             return getContextForEnvironmentVariables(tempEnv, userDN, credentialObj.getBytes());
         } finally {
             credentialObj.clear();
@@ -789,9 +799,19 @@ public class LDAPConnectionContext {
             throws NamingException, UserStoreException {
 
         if (startTLSEnabled) {
-            return LdapContextWrapper.startTLS(environment, connectionControls);
+            // Returns an instance of LdapContextTracingWrapper if tracing is enabled, or LdapContextWrapper if it is
+            // disabled.
+            if (LDAPTracingUtil.isTracingEnabled()) {
+                return StartTlsLdapContextFactory.build(environment, connectionControls, true);
+            } else {
+                return StartTlsLdapContextFactory.build(environment, connectionControls, false);
+            }
         } else {
-            return new InitialLdapContext(environment, connectionControls);
+            if (LDAPTracingUtil.isTracingEnabled()) {
+                return LdapContextTracingWrapper.newInstance(environment, connectionControls);
+            } else {
+                return new InitialLdapContext(environment, connectionControls);
+            }
         }
     }
 

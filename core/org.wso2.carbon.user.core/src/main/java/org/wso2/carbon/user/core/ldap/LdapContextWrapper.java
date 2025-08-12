@@ -17,11 +17,8 @@
  */
 package org.wso2.carbon.user.core.ldap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.user.core.UserStoreException;
 
-import java.io.IOException;
 import java.util.Hashtable;
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -38,9 +35,7 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.ExtendedResponse;
-import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
-import javax.naming.ldap.StartTlsRequest;
 import javax.naming.ldap.StartTlsResponse;
 
 /**
@@ -48,12 +43,11 @@ import javax.naming.ldap.StartTlsResponse;
  */
 public class LdapContextWrapper implements LdapContext {
 
-    private static Log log = LogFactory.getLog(LdapContextWrapper.class);
     private StartTlsResponse startTlsResponse;
     private LdapContext ldapContext;
     private StartTlsResponseWrapper startTlsResponseWrapper;
 
-    private LdapContextWrapper(LdapContext ldapContext, StartTlsResponse startTlsResponse) {
+    LdapContextWrapper(LdapContext ldapContext, StartTlsResponse startTlsResponse) {
 
         this.ldapContext = ldapContext;
         this.startTlsResponse = startTlsResponse;
@@ -77,88 +71,20 @@ public class LdapContextWrapper implements LdapContext {
      * @throws NamingException    if a naming exception is encountered.
      * @throws UserStoreException if a user store related exception is encountered.
      */
-    public static LdapContext startTLS(Hashtable<?, ?> environment, Control[] connectionControls)
+    public static LdapContext build(Hashtable<?, ?> environment, Control[] connectionControls)
             throws NamingException, UserStoreException {
 
-        Hashtable<String, Object> tempEnv = getEnvironmentForSecuredLdapInitialization(environment);
-        LdapContext ldapContext = new InitialLdapContext(tempEnv, connectionControls);
-        try {
-            StartTlsResponse startTlsResponse = (StartTlsResponse) ldapContext.extendedOperation(new StartTlsRequest());
-            startTlsResponse.negotiate();
-            if (log.isDebugEnabled()) {
-                log.debug("StartTLS connection established successfully with LDAP server");
-            }
-            LdapContextWrapper ldapContextWrapper = new LdapContextWrapper(ldapContext, startTlsResponse);
-            ldapContextWrapper.performAuthenticationIfProvided(environment);
-            return ldapContextWrapper;
-        } catch (IOException e) {
-            throw new UserStoreException("Unable to establish the StartTLS connection", e);
-        }
+        return StartTlsLdapContextFactory.build(environment, connectionControls, false);
     }
 
     /**
-     * Get environment variables to initialize secured LDAP context.
+     * Returns the underlying {@link LdapContext} instance.
      *
-     * @param environment environment used to create the initial Context.
-     * @return environment.
+     * @return the LDAP context used for directory operations.
      */
-    private static Hashtable<String, Object> getEnvironmentForSecuredLdapInitialization(Hashtable<?, ?> environment) {
+    LdapContext getLdapContext() {
 
-        Hashtable<String, Object> tempEnv = new Hashtable<>();
-        // Create a temp env for this particular connection by eliminating user credentials details from original env.
-        for (Object key : environment.keySet()) {
-            if (Context.SECURITY_PRINCIPAL.equals(key) || Context.SECURITY_CREDENTIALS.equals(key) ||
-                    Context.SECURITY_AUTHENTICATION.equals(key)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Attribute " + key + " is skip adding to the environment for TLS LDAP initialization");
-                }
-            } else {
-                tempEnv.put((String) key, environment.get(key));
-            }
-        }
-        return tempEnv;
-    }
-
-    /**
-     * Perform simple client authentication.
-     *
-     * @param environment environment used to create the initial Context.
-     * @throws NamingException if a naming exception is encountered.
-     */
-    private void performAuthenticationIfProvided(Hashtable<?, ?> environment)
-            throws NamingException {
-
-        // Adding provided user credentials details one by one after TLS connection started.
-        if (environment.containsKey(Context.SECURITY_AUTHENTICATION)) {
-            ldapContext.addToEnvironment(Context.SECURITY_AUTHENTICATION,
-                    environment.get(Context.SECURITY_AUTHENTICATION));
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute " + Context.SECURITY_AUTHENTICATION + " is added to the " +
-                        "TLS LdapContext environment");
-            }
-        }
-        if (environment.containsKey(Context.SECURITY_PRINCIPAL)) {
-            ldapContext.addToEnvironment(Context.SECURITY_PRINCIPAL,
-                    environment.get(Context.SECURITY_PRINCIPAL));
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute " + Context.SECURITY_PRINCIPAL + " is added to the " +
-                        "TLS LdapContext environment");
-            }
-        }
-        if (environment.containsKey(Context.SECURITY_CREDENTIALS)) {
-            ldapContext.addToEnvironment(Context.SECURITY_CREDENTIALS,
-                    environment.get(Context.SECURITY_CREDENTIALS));
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute " + Context.SECURITY_CREDENTIALS + " is added to the " +
-                        "TLS LdapContext environment");
-            }
-        }
-
-        /*
-        Verify whether the user is authenticated successfully.
-        {@link} https://docs.oracle.com/javase/jndi/tutorial/ldap/ext/src/StartTlsSimple.java
-         */
-        ldapContext.getAttributes("");
+        return ldapContext;
     }
 
     @Override
