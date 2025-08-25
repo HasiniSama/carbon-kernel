@@ -1370,17 +1370,13 @@ public class JDBCTenantManager implements TenantManager {
             sqlTail = String.format(TenantConstants.LIST_TENANTS_MYSQL_TAIL, sortedOrder);
             offsetParameter = offset;
             limitParameter = limit;
-        } else if (ORACLE.equalsIgnoreCase(dbType)) {
-            sqlQuery = TenantConstants.LIST_TENANTS_PAGINATED_ORACLE;
-            sqlTail = String.format(TenantConstants.LIST_TENANTS_ORACLE_TAIL, sortedOrder);
-            offsetParameter = offset + limit;
-            limitParameter = offset;
-        } else if (MSSQL.equalsIgnoreCase(dbType)) {
-            sqlTail = String.format(TenantConstants.LIST_TENANTS_MSSQL_TAIL, sortedOrder);
+        } else if (MSSQL.equalsIgnoreCase(dbType) || ORACLE.equalsIgnoreCase(dbType)) {
+            sqlTail = String.format(TenantConstants.LIST_TENANTS_TAIL, TenantConstants.TENANT_TABLE_ALIAS,
+                    sortedOrder);
             offsetParameter = offset;
             limitParameter = limit;
         } else if (DB2.equalsIgnoreCase(dbType)) {
-            sqlQuery = String.format(TenantConstants.LIST_TENANTS_PAGINATED_DB2, sortedOrder);
+            sqlQuery = String.format(TenantConstants.LIST_TENANTS_INCLUDING_ORG_NAME_PAGINATED_DB2, sortedOrder);
             sqlTail = TenantConstants.LIST_TENANTS_DB2_TAIL;
             offsetParameter = offset + 1;
             limitParameter = offset + limit;

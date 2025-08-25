@@ -19,6 +19,9 @@
 package org.wso2.carbon.user.core.tenant;
 
 public class TenantConstants {
+
+    public static final String TENANT_TABLE_ALIAS = "T";
+
     public static final String ADD_TENANT_WITH_ID_SQL = "INSERT INTO UM_TENANT (UM_ID,UM_DOMAIN_NAME," +
             "UM_EMAIL, UM_CREATED_DATE, UM_USER_CONFIG) VALUES(?,?,?,?,?)";
 
@@ -76,23 +79,47 @@ public class TenantConstants {
     public static final String LIST_TENANTS_PAGINATED_SQL = "SELECT UM_ID, UM_DOMAIN_NAME, UM_EMAIL, " +
             "UM_CREATED_DATE, UM_ACTIVE, UM_USER_CONFIG, UM_TENANT_UUID FROM UM_TENANT WHERE UM_ORG_UUID IN " +
             "(SELECT UM_ID FROM UM_ORG WHERE UM_PARENT_ID IS NULL) ";
-    public static final String LIST_TENANTS_INCLUDING_ORG_NAME_PAGINATED_SQL = "SELECT T.UM_ID, T.UM_DOMAIN_NAME, " +
-            "T.UM_EMAIL, T.UM_CREATED_DATE, T.UM_ACTIVE, T.UM_USER_CONFIG, T.UM_TENANT_UUID, O.UM_ORG_NAME " +
-            "FROM UM_TENANT T INNER JOIN UM_ORG O ON T.UM_ORG_UUID = O.UM_ID " +
-            "WHERE T.UM_ORG_UUID IN (SELECT UM_ID FROM UM_ORG WHERE UM_PARENT_ID IS NULL) ";
+
+    /**
+     * @deprecated Use {@link #LIST_TENANTS_INCLUDING_ORG_NAME_PAGINATED_SQL} instead.
+     */
+    @Deprecated
     public static final String LIST_TENANTS_PAGINATED_ORACLE = "SELECT UM_ID, UM_DOMAIN_NAME, UM_EMAIL, " +
             "UM_CREATED_DATE, UM_ACTIVE, UM_USER_CONFIG, UM_TENANT_UUID FROM (SELECT UM_ID, UM_DOMAIN_NAME, UM_EMAIL, " +
             "UM_CREATED_DATE, UM_ACTIVE, UM_USER_CONFIG, UM_TENANT_UUID, rownum AS rnum FROM (SELECT UM_ID, " +
             "UM_DOMAIN_NAME, UM_EMAIL, UM_CREATED_DATE, UM_ACTIVE, UM_USER_CONFIG, UM_TENANT_UUID FROM UM_TENANT WHERE " +
             "UM_ORG_UUID IN (SELECT UM_ID FROM UM_ORG WHERE UM_PARENT_ID IS NULL) ";
+    /**
+     * @deprecated Use {@link #LIST_TENANTS_INCLUDING_ORG_NAME_PAGINATED_DB2} instead.
+     */
+    @Deprecated
     public static final String LIST_TENANTS_PAGINATED_DB2 = "SELECT UM_ID, UM_DOMAIN_NAME, UM_EMAIL, " +
             "UM_CREATED_DATE, UM_ACTIVE, UM_USER_CONFIG, UM_TENANT_UUID FROM (SELECT ROW_NUMBER() OVER (ORDER BY %s) " +
             "AS rn,UM_TENANT.* FROM UM_TENANT WHERE UM_ORG_UUID IN (SELECT UM_ID FROM UM_ORG WHERE UM_PARENT_ID IS NULL)";
+    public static final String LIST_TENANTS_INCLUDING_ORG_NAME_PAGINATED_SQL = "SELECT T.UM_ID, T.UM_DOMAIN_NAME, " +
+            "T.UM_EMAIL, T.UM_CREATED_DATE, T.UM_ACTIVE, T.UM_USER_CONFIG, T.UM_TENANT_UUID, O.UM_ORG_NAME " +
+            "FROM UM_TENANT T INNER JOIN UM_ORG O ON T.UM_ORG_UUID = O.UM_ID WHERE O.UM_PARENT_ID IS NULL ";
+    public static final String LIST_TENANTS_INCLUDING_ORG_NAME_PAGINATED_DB2 =
+            "SELECT ROW_NUMBER() OVER (ORDER BY %s) AS rn, T.UM_ID, T.UM_DOMAIN_NAME, T.UM_EMAIL, T.UM_CREATED_DATE, " +
+                    "T.UM_ACTIVE, T.UM_USER_CONFIG, T.UM_TENANT_UUID, O.UM_ORG_NAME FROM UM_TENANT T INNER JOIN " +
+                    "UM_ORG O ON T.UM_ORG_UUID = O.UM_ID WHERE O.UM_PARENT_ID IS NULL";
     public static final String LIST_TENANTS_MYSQL_TAIL = "ORDER BY %s LIMIT ?, ?";
     public static final String LIST_TENANTS_POSTGRESQL_TAIL = "ORDER BY %s LIMIT ? OFFSET ?";
     public static final String LIST_TENANTS_DB2_TAIL = " ) WHERE rn BETWEEN ? AND ?";
+
+    /**
+     * @deprecated Use {@link #LIST_TENANTS_TAIL} instead.
+     * Both Oracle 12c+ and SQL Server support the OFFSET FETCH NEXT syntax for pagination.
+     */
     public static final String LIST_TENANTS_MSSQL_TAIL = "ORDER BY %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+    /**
+     * @deprecated Use {@link #LIST_TENANTS_TAIL} instead.
+     * Both Oracle 12c+ and SQL Server support the OFFSET FETCH NEXT syntax for pagination.
+     */
     public static final String LIST_TENANTS_ORACLE_TAIL = "ORDER BY %s) WHERE rownum <= ?) WHERE rnum > ?";
+
+    public static final String LIST_TENANTS_TAIL = "ORDER BY %s.%s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
     public static final String LIST_TENANTS_DOMAIN_FILTER_LIKE = "%s UM_DOMAIN_NAME LIKE ? ";
     public static final String LIST_TENANTS_DOMAIN_FILTER_EQUAL = "%s UM_DOMAIN_NAME=? ";
     public static final String GET_DOMAIN_SQL = "SELECT UM_DOMAIN_NAME FROM UM_TENANT WHERE UM_ID=?";
